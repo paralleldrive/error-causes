@@ -2,10 +2,6 @@
 
 Simple error handling based on standard JavaScript error cause.
 
-## Status: Pre-release
-
-Feel free to kick the tires and report any issues.
-
 Handling errors should be easier. Imagine if you could do this:
 
 ```js
