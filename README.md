@@ -126,3 +126,7 @@ type errorOptions = {
 ## Sponsors
 
 This project is made possible by [EricElliottJS.com](https://ericelliottjs.com) and [DevAnywhere.io](https://devanywhere.io). If you would like to sponsore this project as well, [reach out](https://devanywhere.io/help?subject=Sponsor+Error+Causes).
+
+## License
+
+MIT
