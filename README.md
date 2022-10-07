@@ -133,7 +133,7 @@ type errorOptions = {
   message: String,
   cause: Any,
   stack: String,
-  ...rest: Any
+  ...rest: * // Mixed types allowed
 }
 ```
 
