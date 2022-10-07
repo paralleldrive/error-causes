@@ -2,7 +2,7 @@ import CausedError from "./caused-error.js";
 
 const exists = (x) => x != null;
 
-export const stackFilter = (error) => {
+const filterStack = (error) => {
   const stack = error.stack.split("\n");
   stack.splice(1, 1);
   error.stack = stack.join("\n");
@@ -26,9 +26,7 @@ const createError = ({ message, ...rest } = {}) => {
       ...rest,
     },
   });
-  // Remove the createError function from the stack so that
-  // the stack trace is more useful.
-  return error;
+  return filterStack(error);
 };
 
 /**

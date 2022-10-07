@@ -1,5 +1,6 @@
 import { describe } from "riteway/esm/riteway.js";
-import { errorCauses, createError, stackFilter } from "./error-causes.js";
+import match from "riteway/esm/match.js";
+import { errorCauses, createError } from "./error-causes.js";
 
 /*eslint-disable */
 const createExampleStack = ({filtered = false} = {}) => filtered === false ? `Error: Foo  
@@ -59,16 +60,14 @@ describe("createError", async (assert) => {
   }
 
   {
-    const originalStack = createExampleStack({ filtered: false });
-    const expectedStack = createExampleStack({ filtered: true });
-    const error = new Error();
-    error.stack = originalStack;
+    const error = createError({ name: "TestError" });
+    const contains = match(error.stack);
 
     assert({
       given: "valid input, where createError creates an error stack",
       should: "return an error with createError removed from the stack",
-      actual: stackFilter(error).stack,
-      expected: expectedStack,
+      actual: contains("at createError"),
+      expected: "",
     });
   }
 
