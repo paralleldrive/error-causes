@@ -2,6 +2,13 @@ import CausedError from "./caused-error.js";
 
 const exists = (x) => x != null;
 
+export const stackFilter = (error) => {
+  const stack = error.stack.split("\n");
+  stack.splice(1, 1);
+  error.stack = stack.join("\n");
+  return error;
+};
+
 /**
  * @param {object} [options]
  * @param {string} [options.name] - The name of the error, e.g. "NotFound"
@@ -21,8 +28,6 @@ const createError = ({ message, ...rest } = {}) => {
   });
   // Remove the createError function from the stack so that
   // the stack trace is more useful.
-  const stack = error.stack.split("\n");
-  stack.splice(1, 1);
   return error;
 };
 
