@@ -1,4 +1,4 @@
-import { describe } from "riteway/esm/riteway.js";
+import { describe, Try } from "riteway/esm/riteway.js";
 
 import { errorCauses, createError } from "./error-causes.js";
 
@@ -69,7 +69,7 @@ describe("createError", async (assert) => {
 });
 
 describe("errorCauses", async (assert) => {
-  const [fetchErrors, handleFetchErrors] = errorCauses({
+  const [fetchErrors, configureHandleFetchErrors] = errorCauses({
     NotFound: {
       code: 404,
       message: "The requested resource was not found",
@@ -79,7 +79,7 @@ describe("errorCauses", async (assert) => {
       message: "URI is required",
     },
   });
-  const { NotFound } = fetchErrors;
+  const { NotFound, MissingURI } = fetchErrors;
 
   assert({
     given: "a list of error causes",
@@ -95,15 +95,32 @@ describe("errorCauses", async (assert) => {
     },
   });
 
+  const handleFetchErrors = configureHandleFetchErrors({
+    NotFound: ({ cause }) => cause,
+  });
+
   assert({
     given: "a list of error causes",
     should: "return a function to handle errors",
-    actual: handleFetchErrors({
-      NotFound: ({ cause }) => cause,
-    })(createError(NotFound)),
+    actual: handleFetchErrors(createError(NotFound)),
     expected: NotFound,
   });
 
-  // TODO: Throw an error if we're missing an error cause handler
-  // TODO: Pass original error to MissingCause error
+  assert({
+    given: "a list of error causes and an error that is not configured",
+    should: "throw a new MissingHandler error with a meaningful message",
+    actual: Try(handleFetchErrors, createError(MissingURI)),
+    expected: createError({
+      name: "MissingHandler",
+      message: "Missing handler for cause: MissingURI",
+      cause: MissingURI,
+    }),
+  });
+
+  assert({
+    given: "a list of error causes and an error that is not configured",
+    should: "pass the original error to the MissingHandler error cause",
+    actual: Try(handleFetchErrors, createError(MissingURI)).cause.cause,
+    expected: createError(MissingURI),
+  });
 });

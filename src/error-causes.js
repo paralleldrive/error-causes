@@ -26,6 +26,11 @@ const createError = ({ message, ...rest } = {}) => {
   return error;
 };
 
+const MissingHandler = {
+  name: "MissingHandler",
+  message: "Missing handler for cause",
+};
+
 /**
  * @param {object} causes - A map of error causes keyed by error name
  * @returns [object, function]
@@ -43,11 +48,12 @@ const errorCauses = (causes = {}) => {
     const { cause } = error;
     const handler = handlers[cause.name];
 
-    // if (!handler) throw createError({
-    //   ...MissingCause,
-    //   message: `${ MissingCause.message }: ${ error }`,
-    //   cause: error,
-    // });
+    if (!handler)
+      throw createError({
+        ...MissingHandler,
+        message: `${MissingHandler.message}: ${error.cause.name}`,
+        cause: error,
+      });
 
     return handler(error);
   };

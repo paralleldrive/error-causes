@@ -137,6 +137,22 @@ type errorOptions = {
 }
 ```
 
+### Default Error Causes
+
+The function returned by `errorCauses()` knows a default error. You will need to supply your own handlers to handle this error.
+
+#### `MissingHandler`
+
+`MissingHandler` is thrown when the supplied error has no cause. This is likely
+because the error was not created using `createError()`.
+
+```js
+const MissingHandler = {
+  name: "MissingHandler",
+  message: "Missing handler for cause",
+};
+```
+
 ## Sponsors
 
 This project is made possible by [EricElliottJS.com](https://ericelliottjs.com) and [DevAnywhere.io](https://devanywhere.io). If you would like to sponsore this project as well, [reach out](https://devanywhere.io/help?subject=Sponsor+Error+Causes).
