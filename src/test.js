@@ -69,7 +69,7 @@ describe("createError", async (assert) => {
 });
 
 describe("errorCauses", async (assert) => {
-  const [fetchErrors, handleFetchErrors] = errorCauses({
+  const [fetchErrors, configureHandleFetchErrors] = errorCauses({
     NotFound: {
       code: 404,
       message: "The requested resource was not found",
@@ -98,7 +98,7 @@ describe("errorCauses", async (assert) => {
   assert({
     given: "a list of error causes",
     should: "return a function to handle errors",
-    actual: handleFetchErrors({
+    actual: configureHandleFetchErrors({
       NotFound: ({ cause }) => cause,
     })(createError(NotFound)),
     expected: NotFound,

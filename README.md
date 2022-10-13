@@ -5,7 +5,7 @@ Simple error handling based on standard JavaScript error cause.
 Handling errors should be easier. Imagine if you could do this:
 
 ```js
-const [fetchErrors, handleFetchErrors] = errorCauses({
+const [fetchErrors, configureHandleFetchErrors] = errorCauses({
   NotFound: {
     code: 404,
     message: "The requested resource was not found",
@@ -16,12 +16,14 @@ const [fetchErrors, handleFetchErrors] = errorCauses({
   },
 });
 
-fetch(uri).then(handleFetchErrors({
+const handleFetchErrors = configureHandleFetchErrors({
   NotFound: ({ name, code, message }) =>
     // 404 NotFound: The requested resource was not found
-    console.log(`${ code } ${ name }: ${ message }`),
+    console.log(`${code} ${name}: ${message}`),
   MissingURI: ({ message }) => console.log(message), // URI is required
-}));
+});
+
+fetch(uri).then(handleFetchErrors);
 ```
 
 With Error Causes, you can. When you build an API or SDK, you can define the errors that can occur and export both the possible error causes, and a function to handle them that users can pass their own handlers to. It's a nice way to document your API with live code and make it easy for users to handle errors.
@@ -47,7 +49,6 @@ Or install with yarn:
 ```
 yarn add error-causes
 ```
-
 
 ## Why Error Causes?
 
