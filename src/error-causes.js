@@ -26,6 +26,15 @@ const createError = ({ message, ...rest } = {}) => {
   return error;
 };
 
+const MissingCause = {
+  name: "MissingCause",
+  message: "Error is missing a cause",
+};
+const MissingCauseName = {
+  name: "MissingCauseName",
+  message: "Error's cause is missing a name",
+};
+
 /**
  * @param {object} causes - A map of error causes keyed by error name
  * @returns [object, function]
@@ -41,6 +50,21 @@ const errorCauses = (causes = {}) => {
 
   const handleErrors = (handlers) => (error) => {
     const { cause } = error;
+
+    if (!cause)
+      throw createError({
+        ...MissingCause,
+        message: `${MissingCause.message}: ${error.name}. Did you forget to create the error with createError()?`,
+        cause: error,
+      });
+
+    if (!cause.name)
+      throw createError({
+        ...MissingCauseName,
+        message: `${MissingCauseName.message}: ${error.name}. Did you forget to create the error with createError()?`,
+        cause: error,
+      });
+
     const handler = handlers[cause.name];
 
     // if (!handler) throw createError({

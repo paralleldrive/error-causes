@@ -48,7 +48,6 @@ Or install with yarn:
 yarn add error-causes
 ```
 
-
 ## Why Error Causes?
 
 For every asynchronous API, it's a good idea to define and document the various error causes that might arise. How can a caller distinguish an error caused by bad input from an error caused by a network failure?
@@ -135,6 +134,33 @@ type errorOptions = {
   stack: String,
   ...rest: * // Mixed types allowed
 }
+```
+
+### Default Error Causes
+
+The function returned by `errorCauses()` knows 2 default errors. You will need to supply your own handlers to handle these errors.
+
+#### `MissingCause`
+
+`MissingCause` is thrown when the supplied error has no cause. This is likely
+because the error was not created using `createError()`.
+
+```js
+const MissingCause = {
+  name: "MissingCause",
+  message: "Error is missing a cause",
+};
+```
+
+#### `MissingCauseName`
+
+`MissingCause` is thrown when the supplied error's cause has no name. This is likely because the error was not created using `createError()`.
+
+```js
+const MissingCauseName = {
+  name: "MissingCauseName",
+  message: "Error's cause is missing a name",
+};
 ```
 
 ## Sponsors

@@ -1,4 +1,4 @@
-import { describe } from "riteway/esm/riteway.js";
+import { describe, Try } from "riteway/esm/riteway.js";
 
 import { errorCauses, createError } from "./error-causes.js";
 
@@ -69,7 +69,7 @@ describe("createError", async (assert) => {
 });
 
 describe("errorCauses", async (assert) => {
-  const [fetchErrors, handleFetchErrors] = errorCauses({
+  const [fetchErrors, configureHandleFetchErrors] = errorCauses({
     NotFound: {
       code: 404,
       message: "The requested resource was not found",
@@ -95,15 +95,49 @@ describe("errorCauses", async (assert) => {
     },
   });
 
+  const handleFetchErrors = configureHandleFetchErrors({
+    NotFound: ({ cause }) => cause,
+  });
+
   assert({
     given: "a list of error causes",
     should: "return a function to handle errors",
-    actual: handleFetchErrors({
-      NotFound: ({ cause }) => cause,
-    })(createError(NotFound)),
+    actual: handleFetchErrors(createError(NotFound)),
     expected: NotFound,
   });
 
   // TODO: Throw an error if we're missing an error cause handler
   // TODO: Pass original error to MissingCause error
+
+  {
+    const errorWithoutCause = new Error("Foo");
+
+    assert({
+      given: "a list of error causes and an error without a cause",
+      should: "throw an MissingCause error with meaningful error message",
+      actual: Try(handleFetchErrors, errorWithoutCause),
+      expected: createError({
+        name: "MissingCause",
+        message:
+          "Error is missing a cause: Error. Did you forget to create the error with createError()?",
+        cause: errorWithoutCause,
+      }),
+    });
+  }
+
+  {
+    const errorWithCauseWithoutName = createError(new Error("foo"));
+
+    assert({
+      given: "a list of error causes and an error with a cause without a name",
+      should: "throw an MissingCauseName error with meaningful error message",
+      actual: Try(handleFetchErrors, errorWithCauseWithoutName),
+      expected: createError({
+        name: "MissingCause",
+        message:
+          "Error's cause is missing a name: Error. Did you forget to create the error with createError()?",
+        cause: errorWithCauseWithoutName,
+      }),
+    });
+  }
 });
