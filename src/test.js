@@ -1,6 +1,6 @@
 import { describe } from "riteway/esm/riteway.js";
 import match from "riteway/esm/match.js";
-import { errorCauses, createError } from "./error-causes.js";
+import { errorCauses, createError, noop } from "./error-causes.js";
 
 /*eslint-disable */
 const createExampleStack = ({filtered = false} = {}) => filtered === false ? `Error: Foo  
@@ -103,7 +103,7 @@ describe("errorCauses", async (assert) => {
     expected: {
       NotFound: NotFound,
       MissingURI: {
-        name: "MissingURI",
+        name: "MissingURI", // make sure the name is on it.
         code: 400,
         message: "URI is required",
       },
@@ -115,10 +115,98 @@ describe("errorCauses", async (assert) => {
     should: "return a function to handle errors",
     actual: handleFetchErrors({
       NotFound: ({ cause }) => cause,
+      MissingURI: noop,
     })(createError(NotFound)),
     expected: NotFound,
   });
 
-  // TODO: Throw an error if we're missing an error cause handler
-  // TODO: Pass original error to MissingCause error
+  {
+    const given = "a call to the handler missing an error handler";
+    const description = {
+      given,
+      should: "throw a MissingHandler error",
+    };
+    const missingErrorName = "MissingURI";
+    const expectedCause = {
+      name: "MissingHandler",
+      message: "Missing error handler: MissingURI",
+    };
+
+    try {
+      handleFetchErrors({
+        NotFound: noop,
+      });
+
+      assert({
+        ...description,
+        actual: "no error was thrown",
+        expected: expectedCause,
+      });
+    } catch (e) {
+      assert({
+        ...description,
+        actual: e.cause,
+        expected: expectedCause,
+      });
+
+      const contains = match(e.cause.message);
+      assert({
+        given,
+        should: "report the missing error name",
+        actual: contains(missingErrorName),
+        expected: missingErrorName,
+      });
+    }
+  }
+
+  {
+    const given = "the error cause is not in the list of error causes";
+    const description = {
+      given,
+      should: "throw an unexpected error",
+    };
+
+    const expectedCause = {
+      name: "UnexpectedError",
+      message: "An unexpected error was thrown",
+    };
+
+    try {
+      const e = new Error("This Error Does Not Exist.com");
+      handleFetchErrors({
+        NotFound: noop,
+        MissingURI: noop,
+      })(e);
+
+      assert({
+        ...description,
+        actual: "no error was thrown",
+        expected: expectedCause,
+      });
+    } catch (e) {
+      //name
+      const contains = match(JSON.stringify(e.cause));
+      assert({
+        ...description,
+        actual: contains(expectedCause.name),
+        expected: expectedCause.name,
+      });
+
+      //message
+      assert({
+        ...description,
+        actual: contains(expectedCause.message),
+        expected: expectedCause.message,
+      });
+    }
+  }
+});
+
+describe("noop", async (assert) => {
+  assert({
+    given: "no arguments",
+    should: "return undefined",
+    actual: noop(),
+    expected: undefined,
+  });
 });

@@ -29,6 +29,15 @@ const createError = ({ message, ...rest } = {}) => {
   return filterStack(error);
 };
 
+const MissingHandler = {
+  name: "MissingHandler",
+  message: "Missing error handler",
+};
+const UnexpectedError = {
+  name: "UnexpectedError",
+  message: "An unexpected error was thrown",
+};
+
 /**
  * @param {object} causes - A map of error causes keyed by error name
  * @returns [object, function]
@@ -42,20 +51,39 @@ const errorCauses = (causes = {}) => {
     {}
   );
 
-  const handleErrors = (handlers) => (error) => {
-    const { cause } = error;
-    const handler = handlers[cause.name];
+  const handleErrors = (handlers) => {
+    const errorNames = Object.keys(errors);
 
-    // if (!handler) throw createError({
-    //   ...MissingCause,
-    //   message: `${ MissingCause.message }: ${ error }`,
-    //   cause: error,
-    // });
+    errorNames.forEach((errorName) => {
+      if (!(errorName in handlers)) {
+        throw createError({
+          ...MissingHandler,
+          message: `${MissingHandler.message}: ${errorName}`,
+        });
+      }
+    });
 
-    return handler(error);
+    return (error) => {
+      const { cause = {} } = error;
+      const handler = handlers[cause.name];
+      if (!handler) {
+        throw createError({
+          ...UnexpectedError,
+          message: `${UnexpectedError.message}: ${
+            cause.name ? cause.name : "unknown"
+          }`,
+        });
+      }
+
+      return handler(error);
+    };
   };
 
   return [errors, handleErrors];
 };
 
-export { errorCauses, createError };
+/*eslint-disable*/
+const noop = () => {};
+/*eslint-enable */
+
+export { errorCauses, createError, noop };
