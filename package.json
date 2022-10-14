@@ -1,7 +1,7 @@
 {
   "name": "error-causes",
   "description": "Simple error handling based on standard JavaScript error cause.",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
