@@ -34,6 +34,20 @@ const { NotFound, MissingURI } = fetchErrors;
 if (!uri) throw createError(MissingURI);
 ```
 
+## Getting Started
+
+Install with npm:
+
+```js
+npm install error-causes
+```
+
+Or install with yarn:
+
+```
+yarn add error-causes
+```
+
 
 ## Why Error Causes?
 
@@ -140,7 +154,7 @@ type errorOptions = {
   message: String,
   cause: Any,
   stack: String,
-  ...rest: Any
+  ...rest: * // Mixed types allowed
 }
 ```
 
