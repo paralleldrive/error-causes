@@ -1,14 +1,17 @@
 import { describe } from "riteway/esm/riteway.js";
-
+import match from "riteway/esm/match.js";
 import { errorCauses, createError } from "./error-causes.js";
 
 /*eslint-disable */
-const createExampleStack = () => `Error: Foo  
-at createError (/Users/eric/dev/error-causes/src/error-causes.js:6:3) 
-at Timeout._onTimeout (/Users/eric/dev/error-causes/src/tmp.js:5:97) 
-at listOnTimeout (node:internal/timers:559:17) 
-at process.processTimers (node:internal/timers:502:7) 
-​​​​​at ​​​​​​​​e.stack​​​ ​src/tmp.js:5:3`;
+const createExampleStack = ({filtered = false} = {}) => filtered === false ? `Error: Foo  
+at createError () 
+at Timeout._onTimeout () 
+at listOnTimeout () 
+at process.processTimers () `:
+`Error: Foo  
+at Timeout._onTimeout () 
+at listOnTimeout () 
+at process.processTimers () `;
 /*eslint-enable */
 
 describe("createError", async (assert) => {
@@ -40,7 +43,7 @@ describe("createError", async (assert) => {
     const error = createError();
     assert({
       given: `no ${option}`,
-      should: `not return a casue with a ${option} property`,
+      should: `not return a cause with a ${option} property`,
       actual: Object.prototype.hasOwnProperty.call(error.cause, option),
       expected: false,
     });
@@ -53,6 +56,18 @@ describe("createError", async (assert) => {
       should: "return a cause with the original stack",
       actual: createError({ stack }).cause.stack,
       expected: stack,
+    });
+  }
+
+  {
+    const error = createError({ name: "TestError" });
+    const contains = match(error.stack);
+
+    assert({
+      given: "valid input, where createError creates an error stack",
+      should: "return an error with createError removed from the stack",
+      actual: contains("at createError"),
+      expected: "",
     });
   }
 
