@@ -68,11 +68,11 @@ type Cause = {
 ```js
 (options: ErrorCausesOptions) => [
   ErrorCausesOptions,
-  (CausedError) => Void
+  handleErrors(CausedError) => Void
 ]
 ```
 
-Takes options and returns an object of error causes keyed by error name, and a function that takes a match object of error handlers, and returns a function that takes an error and automatically dispatches the matching error handler.
+Takes options and returns an object containing error causes keyed by error name, and an error handling function.
 
 The returned cause objects can be passed to the `createError` factory to create the corresponding `CausedError`, or used to manually switch over an error if you prefer not to use the error matcher.
 
@@ -82,6 +82,27 @@ type ErrorCausesOptions = {
   [ErrorName]: Cause // See above
 }
 ```
+
+#### handleErrors Throws
+
+If you pass an error handlers object which is missing an error cause, it will throw an error. You must supply handlers for all error causes. This is to ensure that you don't accidentally forget to handle an error.
+
+```js
+const MissingHandler = {
+  name: "MissingHandler",
+  message: "Missing error handler",
+};
+```
+
+`handleErrors` returns a function that takes an error and returns nothing. It will throw if the error is not a `CausedError` or if the error cause is not handled.
+
+```js
+const UnexpectedError = {
+  name: "UnexpectedError",
+  message: "An unexpected error was thrown",
+};
+```
+
 
 ### createError
 
@@ -123,9 +144,18 @@ type errorOptions = {
 }
 ```
 
+### noop
+
+A no-op function which can be used as a default handler for errors that you don't care about.
+
+```js
+() => Void
+```
+
 ## Sponsors
 
-This project is made possible by [EricElliottJS.com](https://ericelliottjs.com) and [DevAnywhere.io](https://devanywhere.io). If you would like to sponsore this project as well, [reach out](https://devanywhere.io/help?subject=Sponsor+Error+Causes).
+This project is made possible by [EricElliottJS.com](https://ericelliottjs.com) and [DevAnywhere.io](https://devanywhere.io). If you would like to sponsor this project, [reach out via DevAnywhere](https://devanywhere.io/help?subject=Sponsor+Error+Causes).
+
 
 ## License
 
