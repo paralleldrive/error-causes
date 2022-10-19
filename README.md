@@ -16,7 +16,7 @@ const [fetchErrors, handleFetchErrors] = errorCauses({
   },
 });
 
-fetch(uri).then(handleFetchErrors({
+fetch(uri).then(handleSuccess).catch(handleFetchErrors({
   NotFound: ({ name, code, message }) =>
     // 404 NotFound: The requested resource was not found
     console.log(`${ code } ${ name }: ${ message }`),
