@@ -51,13 +51,13 @@ yarn add error-causes
 Import with ESM:
 
 ```js
-import errorCauses from "error-causes/esm/index.js";
+import { errorCauses, createError, noop } from "error-causes/esm/index.js";
 ```
 
 Import for CommonJS-compiled environments:
 
 ```js
-import errorCauses from "error-causes";
+import { errorCauses, createError, noop } from "error-causes";
 ```
 
 
