@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint --fix src",
-    "test": "NODE_ENV=test node src/test | tap-nirvana",
+    "test": "NODE_ENV=test node src/index-test.js | tap-nirvana",
     "watch": "watch 'npm run -s test && npm run -s lint' src",
     "release": "release-it"
   },

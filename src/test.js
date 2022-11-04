@@ -1,5 +1,5 @@
-import { describe } from "riteway/esm/riteway.js";
-import match from "riteway/esm/match.js";
+import { describe } from "riteway";
+import match from "riteway/match";
 import { errorCauses, createError, noop } from "./error-causes.js";
 
 /*eslint-disable */
