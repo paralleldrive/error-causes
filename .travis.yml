@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - 'lts/*'
+  - 16
 install:
   - npm install --legacy-peer-deps
 before_script:

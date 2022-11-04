@@ -48,6 +48,18 @@ Or install with yarn:
 yarn add error-causes
 ```
 
+Import with ESM:
+
+```js
+import { errorCauses, createError, noop } from "error-causes/esm/index.js";
+```
+
+Import for CommonJS-compiled environments:
+
+```js
+import { errorCauses, createError, noop } from "error-causes";
+```
+
 
 ## Why Error Causes?
 
