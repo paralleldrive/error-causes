@@ -29,5 +29,8 @@
     "riteway": "7.0.0",
     "tap-nirvana": "1.1.0",
     "watch": "1.0.2"
+  },
+  "dependencies": {
+    "esm": "3.2.25"
   }
 }
