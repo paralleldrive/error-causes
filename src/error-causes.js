@@ -1,6 +1,8 @@
-import CausedError from "./caused-error.js";
+/*global require, module */
 
-const exists = (x) => x != null;
+const CausedError = require("./caused-error.js");
+
+const exists = (x) => x != null && x !== "";
 
 const filterStack = (error) => {
   const stack = error.stack.split("\n");
@@ -19,10 +21,21 @@ const filterStack = (error) => {
  * @param {*} [options.*] - undocumented props
  * @returns {CausedError}
  */
-const createError = ({ message, ...rest } = {}) => {
+const createError = ({
+  message = "",
+  name = "",
+  code = "",
+  stack = "",
+  cause,
+  ...rest
+} = {}) => {
   const error = new CausedError(message, {
     cause: {
       ...(exists(message) && { message }),
+      ...(exists(name) && { name }),
+      ...(exists(code) && { code }),
+      ...(exists(stack) && { stack }),
+      ...(exists(cause) && { cause }),
       ...rest,
     },
   });
@@ -51,7 +64,7 @@ const errorCauses = (causes = {}) => {
     {}
   );
 
-  const handleErrors = (handlers) => {
+  const handleErrors = (handlers = {}) => {
     const errorNames = Object.keys(errors);
 
     errorNames.forEach((errorName) => {
@@ -86,4 +99,6 @@ const errorCauses = (causes = {}) => {
 const noop = () => {};
 /*eslint-enable */
 
-export { errorCauses, createError, noop };
+module.exports.errorCauses = errorCauses;
+module.exports.createError = createError;
+module.exports.noop = noop;

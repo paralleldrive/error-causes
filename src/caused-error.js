@@ -1,3 +1,4 @@
+/* global module */
 /**
  * This subclass of Error supports chaining.
  * If available, it uses the built-in support for property `.cause`.
@@ -22,4 +23,4 @@ function isObject(value) {
   return value !== null && typeof value === "object";
 }
 
-export default CausedError;
+module.exports = CausedError;
