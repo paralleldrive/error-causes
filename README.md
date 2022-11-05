@@ -51,7 +51,7 @@ yarn add error-causes
 Import:
 
 ```js
-import { errorCauses, createError, noop } from "error-causes/esm/index.js";
+import { errorCauses, createError, noop } from "error-causes";
 ```
 
 
