@@ -1,7 +1,7 @@
 {
   "name": "error-causes",
   "description": "Simple error handling based on standard JavaScript error cause.",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "index.js",
   "scripts": {
     "lint": "eslint --fix src",
