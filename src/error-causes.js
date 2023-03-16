@@ -80,6 +80,11 @@ const errorCauses = (causes = {}) => {
       const { cause = {} } = error;
       const handler = handlers[cause.name];
       if (!handler) {
+        console.log(
+          `From error-causes library: No handler found for this error: ${JSON.stringify(
+            error
+          )}`
+        );
         throw createError({
           ...UnexpectedError,
           message: `${UnexpectedError.message}: ${
