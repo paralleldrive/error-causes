@@ -174,7 +174,7 @@ A no-op function which can be used as a default handler for errors that you don'
 
 ## Sponsors
 
-This project is made possible by [EricElliottJS.com](https://ericelliottjs.com) and [DevAnywhere.io](https://devanywhere.io). If you would like to sponsor this project, [reach out via DevAnywhere](https://devanywhere.io/help?subject=Sponsor+Error+Causes).
+This project is made possible by [EricElliottJS.com](https://ericelliottjs.com). If you would like to sponsor this project, [reach out here](https://ericelliottjs.com/support).
 
 
 ## License
