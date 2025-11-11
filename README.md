@@ -1,4 +1,5 @@
 # Error Causes
+[![SudoLang AIDD](https://img.shields.io/badge/✨_SudoLang_AIDD-black)](https://github.com/paralleldrive/aidd)
 
 Simple error handling based on standard JavaScript error cause.
 
